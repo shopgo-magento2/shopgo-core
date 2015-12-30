@@ -21,7 +21,7 @@ TODO
 
 <h2 id="install">Installation</h2>
 
-Below, you can find two ways to install the currency import services module. With the release of Magento 2.0, you'll also be able to install modules using the Magento Marketplaces.
+Below, you can find two ways to install the shopgo core module. With the release of Magento 2.0, you'll also be able to install modules using the Magento Marketplaces.
 
 ### 1. Install via Composer (Recommended)
 First, make sure that Composer is installed: https://getcomposer.org/doc/00-intro.md
@@ -32,14 +32,14 @@ Run Composer require to install the module:
 
     php <your Composer install dir>/composer.phar require shopgo/core:*
 
-### 2. Clone the currency-import-services repository
+### 2. Clone the shopgo-core repository
 Clone the <a href="https://github.com/shopgo-magento2/shopgo-core" target="_blank">shopgo-core</a> repository using either the HTTPS or SSH protocols.
 
 ### 2.1. Copy the code
-Create a directory for the currency import services module and copy the cloned repository contents to it:
+Create a directory for the shopgo core module and copy the cloned repository contents to it:
 
     mkdir -p <your Magento install dir>/app/code/ShopGo/Core
-    cp -R <currency-import-services clone dir>/* <your Magento install dir>/app/code/ShopGo/Core
+    cp -R <shopgo-core clone dir>/* <your Magento install dir>/app/code/ShopGo/Core
 
 ### Update the Magento database and schema
 If you added the module to an existing Magento installation, run the following command:
