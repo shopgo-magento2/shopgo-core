@@ -6,28 +6,30 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="ShopGo\Core\Model\Logger\Handler\Base" type="ShopGo\AdvancedLogger\Model\Logger\Handler\Base">
+        <arguments>
+            <argument name="logNamespacePath" xsi:type="string">shopgo/</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="ShopGo\Core\Model\Logger\Handler\System" type="ShopGo\Core\Model\Logger\Handler\Base">
         <arguments>
-            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
             <argument name="fileName" xsi:type="string">system.log</argument>
             <argument name="loggerType" xsi:type="string">info</argument>
         </arguments>
     </virtualType>
     <virtualType name="ShopGo\Core\Model\Logger\Handler\Debug" type="ShopGo\Core\Model\Logger\Handler\Base">
         <arguments>
-            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
             <argument name="fileName" xsi:type="string">debug.log</argument>
             <argument name="loggerType" xsi:type="string">debug</argument>
         </arguments>
     </virtualType>
     <virtualType name="ShopGo\Core\Model\Logger\Handler\Exception" type="ShopGo\Core\Model\Logger\Handler\Base">
         <arguments>
-            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
             <argument name="fileName" xsi:type="string">exception.log</argument>
             <argument name="loggerType" xsi:type="string">info</argument>
         </arguments>
     </virtualType>
-    <virtualType name="ShopGo\Core\Model\Logger" type="ShopGo\Core\Model\Logger\Monolog">
+    <virtualType name="ShopGo\Core\Model\Logger\Monolog" type="ShopGo\AdvancedLogger\Model\Logger\Monolog">
         <arguments>
             <argument name="name" xsi:type="string">shopgo</argument>
             <argument name="handlers" xsi:type="array">
@@ -37,9 +39,19 @@
             </argument>
         </arguments>
     </virtualType>
-    <type name="ShopGo\Core\Helper\AbstractHelper">
+    <virtualType name="ShopGo\Core\Model\Logger" type="ShopGo\AdvancedLogger\Model\Logger">
+        <arguments>
+            <argument name="logger" xsi:type="object">ShopGo\Core\Model\Logger\Monolog</argument>
+        </arguments>
+    </virtualType>
+    <type name="ShopGo\Core\Helper\Utility">
         <arguments>
             <argument name="logger" xsi:type="object">ShopGo\Core\Model\Logger</argument>
+        </arguments>
+    </type>
+    <type name="ShopGo\Core\Helper\AbstractHelper">
+        <arguments>
+            <argument name="utility" xsi:type="object">ShopGo\Core\Helper\Utility</argument>
         </arguments>
     </type>
 </config>

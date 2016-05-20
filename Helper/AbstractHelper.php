@@ -5,26 +5,65 @@
  */
 namespace ShopGo\Core\Helper;
 
-use ShopGo\Core\Model\Logger\Handler\Base as LoggerHandlerBase;
-use Monolog\Logger;
+use ShopGo\AdvancedLogger\Model\Logger;
 
 abstract class AbstractHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
     /**
-     * @var \Psr\Log\LoggerInterface
+     * Log namespace directory path
      */
-    protected $logger;
+    const LOG_NAMESPACE_PATH = 'shopgo/';
+
+    /**
+     * Log module directory path
+     */
+    const LOG_MODULE_PATH = '';
+
+    /**
+     * @var Utility
+     */
+    protected $utility;
 
     /**
      * @param \Magento\Framework\App\Helper\Context $context
-     * @param \Psr\Log\LoggerInterface $logger
+     * @param Utility $utility
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
-        \Psr\Log\LoggerInterface $logger
+        Utility $utility
     ) {
-        $this->logger = $logger;
+        $this->utility = $utility;
         parent::__construct($context);
+    }
+
+    /**
+     * Get logger
+     *
+     * @return \ShopGo\AdvancedLogger\Model\Logger
+     */
+    public function getLogger()
+    {
+        return $this->utility->getLogger();
+    }
+
+    /**
+     * Get Monolog
+     *
+     * @return \Psr\Log\LoggerInterface
+     */
+    public function getMonolog()
+    {
+        return $this->getLogger()->getMonolog();
+    }
+
+    /**
+     * Get config model
+     *
+     * @return \ShopGo\AdvancedConfig\Model\Config
+     */
+    public function getConfig()
+    {
+        return $this->utility->getConfig();
     }
 
     /**
@@ -33,33 +72,19 @@ abstract class AbstractHelper extends \Magento\Framework\App\Helper\AbstractHelp
      * @param int|string $level
      * @param mixed $message
      * @param array $context
-     * @param resource|string $stream
+     * @param string $file
+     * @param array|string $path
      * @return bool
      */
-    public function log($level, $message, array $context = [], $stream = '')
+    protected function _log($level, $message, array $context = [], $file = '', $path = null)
     {
-        if (gettype($level) == 'string') {
-            $loggerLevels = Logger::getLevels();
-            $level = strtoupper($level);
-            $level = isset($loggerLevels[$level])
-                ? $loggerLevels[$level]
-                : Logger::DEBUG;
+        if (!$path) {
+            $path = static::LOG_NAMESPACE_PATH . static::LOG_MODULE_PATH;
+        } elseif (strpos($path, './') == 0) {
+            $path = str_replace('./', '', $path);
+            $path = static::LOG_NAMESPACE_PATH . static::LOG_MODULE_PATH . $path;
         }
 
-        if (gettype($message) == 'array' || gettype($message) == 'object') {
-            $message = print_r($message, true);
-        }
-
-        if ($this->logger instanceOf \ShopGo\Core\Model\Logger\Monolog) {
-            if ($stream) {
-                $stream = BP . LoggerHandlerBase::BASE_DIR . $stream;
-            }
-
-            $result = $this->logger->addRecord($level, $message, $context, $stream);
-        } else {
-            $result = $this->logger->addRecord($level, $message, $context);
-        }
-
-        return $result;
+        return $this->getLogger()->log($level, $message, $context, $file, $path);
     }
 }

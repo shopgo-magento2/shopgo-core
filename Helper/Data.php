@@ -7,5 +7,5 @@ namespace ShopGo\Core\Helper;
 
 class Data extends AbstractHelper
 {
-
+    //Empty class
 }
